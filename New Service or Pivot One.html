@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Service Brand Lab: B2C India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --orange: #ff7a1a;
+      --green: #008c4a;
+      --dark: #11f2933;
+      --light-bg: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--light-bg);
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1100px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .header {
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      color: #ffffff;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 0.95rem;
+      opacity: 0.92;
+    }
+
+    .flag-strip {
+      display: flex;
+      height: 6px;
+    }
+    .flag-strip div:nth-child(1) { background: var(--orange); flex: 1; }
+    .flag-strip div:nth-child(2) { background: #ffffff; flex: 1; }
+    .flag-strip div:nth-child(3) { background: var(--green); flex: 1; }
+
+    .content {
+      padding: 20px 24px 24px;
+    }
+
+    /* INTRO */
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .intro p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      border-left: 3px solid var(--green);
+      padding-left: 10px;
+      background: #f8fafc;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      border-radius: 4px;
+    }
+    @media (min-width: 800px) {
+      .intro { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: linear-gradient(90deg, #ff7a1a, #008c4a);
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .tab-btn span { font-size: 0.8rem; opacity: 0.75; }
+
+    .tab-btn.primary {
+      background: linear-gradient(90deg, var(--orange), var(--green));
+    }
+
+    .tab-btn.outline-green {
+      border-color: var(--green);
+      color: var(--green);
+      font-weight: 600;
+      background: #ffffff;
+    }
+
+    /* PANELS */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(4px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .panel-card {
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px 14px;
+      background: #f9fafb;
+    }
+    .panel-card h2 { font-size: 1.05rem; margin-bottom: 8px; color: var(--green); }
+    .panel-card p { font-size: 0.92rem; line-height: 1.5; margin-bottom: 10px; }
+
+    /* SOLUTION TEXT BOX ONLY */
+    .field-group { margin-bottom: 12px; }
+    .field-group label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .field-group textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      resize: vertical;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #ffffff;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-align: right;
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 12px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-top: 4px solid var(--orange);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .modal-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+    .modal-header h2 { font-size: 1rem; font-weight: 700; }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 12px 16px 16px;
+      overflow-y: auto;
+    }
+    .modal-body p { font-size: 0.92rem; margin-bottom: 10px; }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .modal-footer {
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      background: #f9fafb;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>MSI Capstone Lab: B2C Market</h1>
+      <p>Read the following sections, and <b>click the tabs!</b> </p>
+    </div>
+
+    <div class="flag-strip"><div></div><div></div><div></div></div>
+
+    <div class="content">
+      <!-- FRONT PAGE PARAGRAPHS -->
+      <section class="intro">
+        <p><strong>Capstone Lab Introduction:</strong> </br> In this lab, you will either manage market dominance or disrupt a category.
+  <span id="capstone-more" style="display: none;">
+    </br>Your challenge is to propose plans to pivot a case, such as BookMyShow, Nykaa, or Myntra, to retain their dominance. 
+    Or, act as a competitor and design a plan to outsmart them. 
+    </br>To learn successful strategies in market disruption and dominance, click the tabs under the section: 
+    <b>Check the examples</b> — each tells a story of deep insight, and strategic execution. 
+   </br></br> For the lab challenge, start with the briefs on the <b>Three Suggested Cases</b>.
+  </span>
+  <button id="capstone-toggle" type="button" onclick="toggleCapstoneReadMore()" style="border:none;background:none;color:#0b5ed7;cursor:pointer;padding:0;margin-left:4px;text-decoration:underline;">
+    Read more
+  </button>
+</p>
+
+<script>
+  function toggleCapstoneReadMore() {
+    const moreText = document.getElementById("capstone-more");
+    const btn = document.getElementById("capstone-toggle");
+
+    if (moreText.style.display === "none" || moreText.style.display === "") {
+      moreText.style.display = "inline";
+      btn.textContent = "Read less";
+    } else {
+      moreText.style.display = "none";
+      btn.textContent = "Read more";
+    }
+  }
+</script>
+        <p><strong>Three Suggested Cases:</strong> </br>BookMyShow, Nykaa, and Myntra. <br>
+    <strong>BookMyShow:</strong> It dominates   
+  <span id="cases-more" style="display: none;">
+    India's online ticketing space with a <em>60%–80% market share</em>. Its nearest competitor is Paytm, with a <em>15%–20%</em> share.  
+    <br>
+    <strong>Nykaa:</strong> Holds a <em>35%–40%</em> share of India’s online Beauty and Personal Care market. Competitors include Amazon (<em>20–25%</em>), Flipkart (<em>10–15%</em>), and Purplle (<em>5–10%</em>).  
+    <br>
+    <strong>Myntra:</strong> With over <em>50%</em> market share, it is the undisputed leader in digital fashion. Reliance’s AJIO is rapidly catching up with <em>25%–30%</em> share.  
+    <br>
+    <strong>Now, review the Lab Challenge:</strong>  
+    </span>
+
+  <button id="cases-toggle" 
+    type="button"
+    onclick="toggleCasesMore()"
+    style="border:none;background:none;color:#0b5ed7;cursor:pointer;padding:0;margin-left:4px;text-decoration:underline;">
+    Read more
+  </button>
+</p>
+
+<script>
+  function toggleCasesMore() {
+    const moreText = document.getElementById("cases-more");
+    const btn = document.getElementById("cases-toggle");
+
+    if (moreText.style.display === "none" || moreText.style.display === "") {
+      moreText.style.display = "inline";
+      btn.textContent = "Read less";
+    } else {
+      moreText.style.display = "none";
+      btn.textContent = "Read more";
+    }
+  }
+</script>
+        <p><strong>Lab Challenge Steps:</strong></br> <u>First</u>, engage with this module individually.</br> <u>Next</u>, analyse <span id="lab-more" style="display: none;">
+    the samples and the challenge as a group.  
+    <em>Note: These groups can be your existing ET project groups.</em>
+    <br>
+    <strong>In your respective groups:</strong>
+    <br>
+    1) Select one service brand from the cases above (dominant brand or a challenger).<br>
+    2) Collectively negotiate an objective as a group.<br>
+    3) Prepare a short strategy outline that responds to the competitive context.
+    <br>
+    Finally, click the <strong>Lab Challenge</strong> tab, read the instructions on how to share the outline, and submit it via the provided link.
+  </span>
+
+  <button id="lab-toggle"
+    type="button"
+    onclick="toggleLabMore()"
+    style="border:none;background:none;color:#0b5ed7;cursor:pointer;padding:0;margin-left:4px;text-decoration:underline;">
+    Read more
+  </button>
+</p>
+
+<script>
+  function toggleLabMore() {
+    const moreText = document.getElementById("lab-more");
+    const btn = document.getElementById("lab-toggle");
+
+    if (moreText.style.display === "none" || moreText.style.display === "") {
+      moreText.style.display = "inline";
+      btn.textContent = "Read less";
+    } else {
+      moreText.style.display = "none";
+      btn.textContent = "Read more";
+    }
+  }
+</script>
+
+      </section>
+
+      <!-- TABS -->
+<H3><b> Check the examples.</b></H3>
+      <nav class="tabs">
+        <button class="tab-btn" onclick="openModal('modal-titan')">
+          <b>Titan's Saga</b>
+        </button>
+
+        <button class="tab-btn" onclick="openModal('modal-tata')">
+          Tata-Tea's Saga
+        </button>
+
+        <button class="tab-btn" onclick="openModal('modal-tanisq')">
+          Tanisq's Saga
+        </button>
+      </nav>
+</br>
+<p><b>The Feedback Space</b></p>
+      <nav class="tabs">		
+        <!-- CHANGE 1: CTA now opens a modal -->
+        <button class="tab-btn primary" onclick="openModal('modal-cta')">
+          Lab-Challenge
+        </button>
+
+        <button class="tab-btn outline-green" onclick="openSolutionTab()">
+          Teacher's Corner!
+        </button>
+      </nav>
+
+      <!-- TAB 5 (ONLY SOLUTION VISIBLE INSIDE) -->
+      <section id="tab-solution" class="tab-panel">
+        <div class="panel-card">
+          <h2>Instructor Solution / Model Answer Space</h2>
+          <p>This section is visible only after entering the password.</p>
+
+          <div class="field-group">
+            <label for="solution-notes">Solution Notes / Model Answer</label>
+            <textarea id="solution-notes"
+              placeholder="Paste or type your solution outline here..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        <b>Curator: Dr. Pravat, GIM, Goa, for accademic use.</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS: TITAN -->
+  <div id="modal-titan" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Titan – Case Interstitial</h2>
+        <button class="modal-close" onclick="closeModal('modal-titan')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>When Titan entered India’s watch market, the category was defined by the state-run incumbent (HMT) and a low-innovation competitor (Allwyn). The dominant logic was functional: accurate timekeeping at accessible price points. Titan reframed the category by foregrounding design, aspiration, and lifestyle association — elevating a utilitarian product into a personal identity marker. </p>
+
+        <div class="video-wrapper">
+          <iframe width="1116" height="628" src="https://www.youtube.com/embed/F3YOBujD2Ow" title="Saga of Titan by Pravat" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="modal-footer"><b>Tip</b>: Please, pause at key timestamps, and think - why, how, what?</br> Compare “fight the leader” vs category creation. </br> </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TATA TEA -->
+  <div id="modal-tata" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Tata Tea – Case Interstitial</h2>
+        <button class="modal-close" onclick="closeModal('modal-tata')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>In the late 1980s and early 1990s, Hindustan Unilever dominated packaged tea with Red Label and Taj Mahal. Tata Tea, then a plantation-driven company, recognised a structural opening: consumer dissatisfaction with generic blends and a growing appetite for regional taste authenticity. The rest is history!</p>
+
+        <div class="video-wrapper">
+          <iframe width="1116" height="628" src="https://www.youtube.com/embed/2zSjjpsaW1k" title="Tata Tea by Dr Pravat" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="modal-footer"><b>Tip</b>: Please, pause at key timestamps, and think - why, how, what? </br> Compare “fight the leader” vs category creation.</div>
+    </div>
+  </div>
+
+  <!-- MODAL: TANISQ -->
+  <div id="modal-tanisq" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Tanisq – Case Interstitial</h2>
+        <button class="modal-close" onclick="closeModal('modal-tanisq')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Tanishq’s early years were marked by strategic misalignment: Western design sensibilities and a premium retail format that did not resonate with Indian jewellery’s deep cultural and emotional anchors. A seven-year insight programme revealed that consumers valued purity assurance, ritual alignment, and local aesthetic codes far more than global trends.</p>
+
+        <div class="video-wrapper">
+          <iframe width="1116" height="628" src="https://www.youtube.com/embed/Z6yHO4MFVXk" title="Tanisq&#39;s Story by Dr  Pravat" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="modal-footer"><b>Tip</b>: Please, pause at key timestamps, and think - why, how, what? </br>Focus on belief change, by institutionalising trust.</div>
+    </div>
+  </div>
+
+  <!-- *** NEW MODAL: MSI CTA *** -->
+  <div id="modal-cta" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>MSI – Call to Action</h2>
+        <button class="modal-close" onclick="closeModal('modal-cta')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Now that you are here, we hope you are ready to upload your group's 1-page note.</p>
+        <p>When ready, you can submit the note and the groups details via the Ms-Forms link.</p>
+
+        <p><strong>Submission Link:</strong></p>
+        <a href="https://forms.office.com/r/HuNbJS2sCk" target="_blank"
+           style="display:inline-block;padding:10px 16px;background:var(--orange);color:#fff;border-radius:6px;text-decoration:none;">
+          Upload project's outline (Form link)
+        </a>
+      </div>
+      <div class="modal-footer">CTA for your capstone Lab.</div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    function showTab(id) {
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("modal-overlay")) {
+        e.target.classList.remove("active");
+      }
+    });
+
+    const SOLUTION_PASSWORD = "XYZ";
+
+    function openSolutionTab() {
+      const input = prompt("Enter password to view the Solution tab:");
+      if (input === SOLUTION_PASSWORD) {
+        showTab("tab-solution");
+      } else {
+        alert("Incorrect password. Try again.");
+      }
+    }
+  </script>
+</body>
+</html>
